@@ -19,16 +19,31 @@ On top of the dataset, in order:
 ## Current state (as of 2026-11-10)
 
 - **Repo:** github.com/ayush29feb/kite-clip-dataset — README is pushed.
-- **Static page (current focus):** a fully client-side upload page at the
-  repo root (`index.html` + assets), to be hosted on **GitHub Pages**
-  (expected URL: https://ayush29feb.github.io/kite-clip-dataset/ — note:
-  Pages needs the repo public on a free plan). Everything doable in the
-  browser is done in the browser: clip preview, duration/resolution
-  readout, poster frame via canvas, SHA-256 via WebCrypto, metadata form,
-  consent gate; submitted clips (metadata + consent record + video blob)
-  are saved in **IndexedDB** so cards persist and stay playable on the
-  same device. A single `saveClip()` seam is where a real upload API
-  later replaces the local save.
+- **Static page (current focus): LIVE on GitHub Pages** —
+  https://ayush29feb.github.io/kite-clip-dataset/ (enabled 2026-11-10,
+  branch deploy from main/root; the Actions-workflow route is blocked
+  because the Muse GitHub App lacks Workflows permission). Fully
+  client-side (`index.html` + assets at repo root). Everything doable in
+  the browser is done in the browser: clip preview, duration/resolution
+  readout, poster frame via canvas, SHA-256 via WebCrypto, consent gate;
+  submitted clips (metadata + consent record + video blob) are saved in
+  **IndexedDB** so cards persist and stay playable on the same device.
+  A single `saveClip()` seam is where a real upload API later replaces
+  the local save.
+  - **UI (redesigned 2026-11-10):** not a form — a compact summary card
+    under the clip. One row per field (Trick, Riders, Spot, Shot type,
+    Device, Wind, Kite size, Level, Caption, Uploader); empty rows show
+    "+ Add", set values show as chips; tapping a row expands only that
+    editor. Trick has 18 quick-pick pills + free text.
+  - **File metadata mining (pure-JS MP4/MOV parser, no deps):** taken
+    date, camera make/model (auto-fills Device, "from your file" hint),
+    software, rotation/orientation, plus GPS via an ISO 6709 byte scan
+    (accepts 1–2 digit latitudes). When GPS is found the **Spot field
+    pre-fills itself**: coordinates immediately, then a Nominatim
+    reverse-geocode swaps in the place name; spot map shows beneath.
+    When no GPS exists the meta line says so explicitly ("No GPS in
+    this file") — silence was too ambiguous. Known limit: GoPro GPMF
+    binary GPS is not readable in the browser (backend job).
 - **A prototype also exists** as a hosted app in Ayush's Muse account
   ("Kite Clip Uploader") with a working server-side ffmpeg transcoding
   pipeline — treat it as the reference implementation for the transcode
@@ -69,7 +84,9 @@ On top of the dataset, in order:
 ## PRIVATE contacts — never published
 
 - Each rider row also has an **optional contact** (email or Instagram
-  handle), and contacts exist ONLY so Ayush can keep track of who's who
+  handle); the **uploader** also has an optional contact field
+  (`private.uploader_contact`). Contacts exist ONLY so Ayush can keep
+  track of who's who
   and whose permission he has. **Contacts are never part of the public
   dataset** — store them nested under a `private` object in the record,
   never alongside the public metadata fields, and strip them from any
