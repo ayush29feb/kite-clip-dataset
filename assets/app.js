@@ -297,6 +297,7 @@ async function scanFile(file) {
     showGPSMap();
     renderClipMeta();
     refreshSummaries(); // reflect the GPS in the Spot row right away
+    prefillSpotFromGPS(gps.lat, gps.lon, file);
   }
 
   // Whatever else the file's own metadata offers: taken date, camera
@@ -709,6 +710,12 @@ function refreshSummaries() {
   const spotText = val(els.location);
   if (spotText) {
     renderSummary("spot", [], spotText);
+    if (pickedSpot && pickedSpot.fromGPS) {
+      const hint = document.createElement("span");
+      hint.className = "meta-fromfile";
+      hint.textContent = "from your file";
+      summaryEls.spot.append(hint);
+    }
   } else if (clipInfo.gps_lat != null && clipInfo.gps_lon != null) {
     renderSummary("spot", [`📍 ${fmtCoords(clipInfo.gps_lat, clipInfo.gps_lon)}`], null);
     const hint = document.createElement("span");
@@ -971,6 +978,41 @@ function pickLocation(item) {
 function hideLocationResults() {
   els.locationResults.hidden = true;
   els.locationResults.replaceChildren();
+}
+
+/* Pre-fill the Spot from the clip's own GPS: drop the coordinates into
+ * the field immediately, show the spot map, then reverse-geocode
+ * (Nominatim) to swap the raw coordinates for a place name. Only runs
+ * when the user hasn't typed or picked a spot themselves; anything the
+ * user does afterwards wins (the input handler un-picks on edit). */
+async function prefillSpotFromGPS(lat, lon, file) {
+  if (pickedSpot || els.location.value.trim()) return;
+  const coordsName = fmtCoords(lat, lon);
+  pickedSpot = { name: coordsName, lat, lon, fromGPS: true };
+  els.location.value = coordsName;
+  els.locationCoords.textContent = coordsName;
+  els.locationGmaps.href = gmapsURL(lat, lon);
+  els.locationMap.src = osmEmbedURL(lat, lon);
+  els.locationMapBlock.hidden = false;
+  refreshSummaries();
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`,
+      { headers: { Accept: "application/json" } }
+    );
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data || !data.display_name) return;
+    // Still the same clip, spot untouched since the GPS pre-fill?
+    if (selectedFile !== file || !pickedSpot || !pickedSpot.fromGPS) return;
+    if (els.location.value.trim() !== coordsName) return;
+    const shortName = data.display_name.split(",").slice(0, 3).join(",").trim();
+    pickedSpot = { name: shortName, lat, lon, fromGPS: true };
+    els.location.value = shortName;
+    refreshSummaries();
+  } catch {
+    // Offline etc. — the coordinates stay as the pre-filled spot.
+  }
 }
 
 // Close the dropdown when tapping/clicking anywhere else.
