@@ -215,7 +215,11 @@ function renderClipMeta() {
     clipInfo.taken_at
       ? `Taken ${new Date(clipInfo.taken_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`
       : null,
-    clipInfo.gps_lat != null ? "📍 GPS found in file" : null,
+    clipInfo.gps_lat != null
+      ? "📍 GPS found in file"
+      : clipInfo.gps_checked
+        ? "No GPS in this file"
+        : null,
   ].filter(Boolean);
   els.clipMeta.textContent = bits.join(" · ");
 }
@@ -291,6 +295,7 @@ async function scanFile(file) {
     }
   }
   const gps = findISO6709(buf);
+  clipInfo.gps_checked = true; // scan finished — renderClipMeta can now say so
   if (gps && selectedFile === file) {
     clipInfo.gps_lat = gps.lat;
     clipInfo.gps_lon = gps.lon;
@@ -298,6 +303,8 @@ async function scanFile(file) {
     renderClipMeta();
     refreshSummaries(); // reflect the GPS in the Spot row right away
     prefillSpotFromGPS(gps.lat, gps.lon, file);
+  } else if (selectedFile === file) {
+    renderClipMeta(); // shows the explicit "No GPS in this file" note
   }
 
   // Whatever else the file's own metadata offers: taken date, camera
@@ -320,7 +327,9 @@ async function scanFile(file) {
 // Scans in chunks (metadata can sit anywhere in the file) with a small
 // carry-over so a match straddling a chunk boundary isn't missed.
 function findISO6709(buf) {
-  const re = /([+-]\d{2}\.\d{3,})([+-]\d{3}\.\d{3,})/;
+  // Latitude is 1–2 integer digits (equatorial spots are single-digit),
+  // longitude 2–3; both need 3+ decimal places.
+  const re = /([+-]\d{1,2}\.\d{3,})([+-]\d{2,3}\.\d{3,})/;
   const view = new Uint8Array(buf);
   const CHUNK = 4 * 1024 * 1024;
   const decoder = new TextDecoder("iso-8859-1");
