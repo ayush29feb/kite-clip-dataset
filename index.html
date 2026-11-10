@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kite Clip Dataset — Upload a clip</title>
+<meta name="description" content="An open kitesurfing trick video dataset. Drop a 5–15s clip, add whatever details you want, and help build training data for kiting models.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<main class="page">
+
+  <header class="hero">
+    <p class="eyebrow">Open dataset · CC BY 4.0</p>
+    <h1>Kite Clip Dataset</h1>
+    <p class="lede">Drop a 5–15 second trick clip. Add as much detail as you
+      want — nothing is forced. Every clip helps train models that can
+      recognise tricks, and one day generate kiting video.</p>
+  </header>
+
+  <!-- ---------- Upload card ---------- -->
+  <section class="card upload-card" aria-label="Upload a clip">
+
+    <!-- Hero: clip picker / preview -->
+    <div class="clip-stage" id="clipStage">
+      <input type="file" id="fileInput" accept="video/*" hidden>
+      <button type="button" class="clip-picker" id="clipPicker">
+        <span class="clip-picker-icon" aria-hidden="true">＋</span>
+        <span class="clip-picker-title">Tap to pick a clip</span>
+        <span class="clip-picker-sub">or drop a video file here · 5–15 seconds is perfect</span>
+      </button>
+      <video id="clipPreview" class="clip-preview" playsinline muted loop controls hidden></video>
+      <button type="button" class="clip-change" id="clipChange" hidden>Change clip</button>
+    </div>
+
+    <p class="clip-meta" id="clipMeta" hidden></p>
+    <p class="warn" id="durationWarn" hidden></p>
+
+    <!-- Details: everything optional -->
+    <form id="clipForm" novalidate>
+      <fieldset class="details">
+        <legend>Details <span class="optional-note">— all optional, fill in what you know</span></legend>
+
+        <label class="field field-trick">
+          <span class="field-label">Trick name</span>
+          <input type="text" id="trickName" name="trickName" placeholder="e.g. Backroll, Kiteloop, Board-off…" autocomplete="off">
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Rider — who's in the clip</span>
+            <input type="text" id="riderName" name="riderName" placeholder="Rider's name" autocomplete="off">
+          </label>
+          <label class="field">
+            <span class="field-label">Uploader — that's you</span>
+            <input type="text" id="uploaderName" name="uploaderName" placeholder="Your name" autocomplete="off">
+          </label>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="samePerson">
+          <span>I'm the rider in this clip</span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Location</span>
+          <input type="text" id="location" name="location" placeholder="Spot, beach, city…" autocomplete="off">
+        </label>
+
+        <label class="field">
+          <span class="field-label">Recording device</span>
+          <select id="deviceSelect" name="deviceSelect">
+            <option value="">Not sure / skip</option>
+            <option>GoPro</option>
+            <option>iPhone</option>
+            <option>Android phone</option>
+            <option>Insta360</option>
+            <option>DJI drone</option>
+            <option>Ray-Ban Meta</option>
+            <option value="__other">Other…</option>
+          </select>
+        </label>
+        <label class="field" id="deviceOtherField" hidden>
+          <span class="field-label">Device (other)</span>
+          <input type="text" id="deviceOther" name="deviceOther" placeholder="What was it filmed on?" autocomplete="off">
+        </label>
+
+        <div class="field">
+          <span class="field-label">Shot type</span>
+          <div class="chips" id="shotChips" role="radiogroup" aria-label="Shot type">
+            <button type="button" class="chip" data-value="pov" role="radio" aria-checked="false">POV</button>
+            <button type="button" class="chip" data-value="drone" role="radio" aria-checked="false">Drone</button>
+            <button type="button" class="chip" data-value="handheld" role="radio" aria-checked="false">Handheld</button>
+            <button type="button" class="chip" data-value="static" role="radio" aria-checked="false">Static / tripod</button>
+            <button type="button" class="chip" data-value="other" role="radio" aria-checked="false">Other</button>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="field-label">Caption</span>
+          <textarea id="caption" name="caption" rows="2" placeholder="Anything about this clip — conditions, the session, the landing…"></textarea>
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Wind</span>
+            <input type="text" id="wind" name="wind" placeholder="e.g. 25 kn" autocomplete="off">
+          </label>
+          <label class="field">
+            <span class="field-label">Kite size</span>
+            <input type="text" id="kiteSize" name="kiteSize" placeholder="e.g. 9m" autocomplete="off">
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Level</span>
+            <select id="level" name="level">
+              <option value="">Skip</option>
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+              <option>Pro</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">Tags</span>
+            <input type="text" id="tags" name="tags" placeholder="comma, separated, tags" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Consent: the only hard requirement -->
+      <fieldset class="consent">
+        <legend>Before you save — this dataset is public</legend>
+        <p class="consent-intro">Clips in this dataset are published openly for
+          anyone to download and use, including for training AI models. Please
+          confirm all four:</p>
+        <label class="check">
+          <input type="checkbox" class="consent-box" id="consentRights">
+          <span>I own this clip, or I have the owner's permission to submit it.</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" class="consent-box" id="consentRider">
+          <span>The rider in the clip has given permission for it to be shared publicly.</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" class="consent-box" id="consentLicense">
+          <span>I agree this clip and its details (including GPS location, if the
+            file has it) will be released publicly under
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" class="consent-box" id="consentRecall">
+          <span>I understand that once a clip is published and downloaded by others,
+            those copies can't be fully recalled. A takedown request removes it
+            from this dataset and future versions.</span>
+        </label>
+      </fieldset>
+
+      <button type="submit" class="submit" id="submitBtn" disabled>Confirm &amp; save clip</button>
+      <p class="status" id="formStatus" role="status"></p>
+      <p class="storage-note">For now, saved clips live only in this browser on
+        this device — the shared dataset backend comes later, and nothing is
+        uploaded anywhere yet.</p>
+    </form>
+  </section>
+
+  <!-- ---------- Saved clips ---------- -->
+  <section class="recent" aria-label="Saved clips">
+    <h2>Saved clips</h2>
+    <div class="clip-grid" id="clipGrid">
+      <p class="empty-note" id="emptyNote">Loading…</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Dataset maintained by <strong>Ayush Saraf</strong>, published under his own name.
+      Clips and metadata are released under
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
+    <p>Want a clip removed? Takedown requests are honoured for the dataset and
+      future versions — contact the maintainer at
+      <!-- TODO: replace with the real takedown contact email before launch -->
+      <span class="todo">TODO: takedown contact email</span>.</p>
+  </footer>
+
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>

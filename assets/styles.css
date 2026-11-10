@@ -1,0 +1,213 @@
+/* Kite Clip Dataset — mobile-first, Partiful-style: one hero media card,
+   clean type, generous spacing, details below the media. */
+
+:root {
+  --bg: #f6f4ef;
+  --card: #ffffff;
+  --ink: #17202a;
+  --muted: #68707c;
+  --line: #e6e1d8;
+  --accent: #0e7c66;
+  --accent-ink: #ffffff;
+  --warn-bg: #fdf3e3;
+  --warn-ink: #8a5a12;
+  --radius: 20px;
+  --shadow: 0 8px 30px rgba(23, 32, 42, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.45;
+}
+
+.page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+/* ---------- Hero ---------- */
+.hero { padding: 16px 4px 20px; }
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.hero h1 { margin: 0 0 8px; font-size: 34px; line-height: 1.1; letter-spacing: -0.02em; }
+.lede { margin: 0; color: var(--muted); font-size: 16px; }
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* ---------- Clip stage (hero media) ---------- */
+.clip-stage { position: relative; background: #101418; }
+.clip-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 56px 20px;
+  border: 0;
+  background: transparent;
+  color: #eef2f5;
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+.clip-picker-icon { font-size: 40px; line-height: 1; color: var(--accent); }
+.clip-picker-title { font-size: 18px; font-weight: 700; }
+.clip-picker-sub { font-size: 13px; color: #9fb0bd; }
+.clip-stage.dragover { outline: 3px dashed var(--accent); outline-offset: -10px; }
+.clip-preview { display: block; width: 100%; max-height: 70vh; background: #000; }
+.clip-change {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.clip-meta { margin: 0; padding: 10px 18px 0; font-size: 13px; color: var(--muted); }
+.warn {
+  margin: 10px 18px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  font-size: 14px;
+}
+
+/* ---------- Form ---------- */
+form { padding: 6px 18px 20px; }
+fieldset { border: 0; margin: 0; padding: 14px 0 0; }
+legend { font-size: 17px; font-weight: 700; padding: 0; }
+.optional-note { font-size: 13px; font-weight: 400; color: var(--muted); }
+
+.field { display: block; margin-top: 14px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.field input[type="text"],
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbfaf7;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px; /* 16px stops iOS zoom-on-focus */
+}
+.field textarea { resize: vertical; }
+.field-trick input { font-size: 18px; font-weight: 600; padding: 14px 12px; }
+
+.toggle { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 14px; color: var(--muted); }
+.toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+/* Shot-type chips */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: #fbfaf7;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.chip[aria-checked="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* ---------- Consent ---------- */
+.consent { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 16px; }
+.consent-intro { margin: 8px 0 4px; font-size: 14px; color: var(--muted); }
+.check { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; font-size: 15px; }
+.check input { width: 20px; height: 20px; margin-top: 2px; flex: none; accent-color: var(--accent); }
+.check a { color: var(--accent); }
+
+/* ---------- Submit / status ---------- */
+.submit {
+  width: 100%;
+  margin-top: 18px;
+  padding: 16px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.submit:disabled { background: #c9cdd2; cursor: not-allowed; }
+.status { margin: 12px 0 0; font-size: 14px; text-align: center; }
+.status.ok { color: var(--accent); font-weight: 600; }
+.status.error { color: #b3261e; }
+.storage-note { margin: 12px 0 0; font-size: 12px; color: var(--muted); text-align: center; }
+
+/* ---------- Saved clips ---------- */
+.recent { margin-top: 32px; }
+.recent h2 { font-size: 22px; margin: 0 4px 14px; }
+.clip-grid { display: grid; gap: 14px; }
+.empty-note { color: var(--muted); margin: 0 4px; }
+
+.clip-card { padding: 0; }
+.clip-card-media { background: #101418; }
+.clip-card-media video { display: block; width: 100%; max-height: 60vh; background: #000; }
+.clip-card-body { padding: 14px 16px 16px; }
+.clip-card-title { margin: 0; font-size: 18px; font-weight: 700; }
+.clip-card-sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.clip-card details { margin-top: 10px; }
+.clip-card summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--accent); }
+.clip-card dl { margin: 10px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 14px; }
+.clip-card dt { color: var(--muted); }
+.clip-card dd { margin: 0; word-break: break-word; }
+.clip-remove {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: transparent;
+  color: #b3261e;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ---------- Footer ---------- */
+.footer { margin-top: 36px; padding: 0 4px; color: var(--muted); font-size: 13px; }
+.footer a { color: var(--accent); }
+.todo { border-bottom: 1px dashed currentColor; }
+
+@media (min-width: 720px) {
+  .clip-grid { grid-template-columns: 1fr 1fr; }
+  .hero h1 { font-size: 40px; }
+}

@@ -8,6 +8,18 @@ kiting (a generative video model built on this data).
 Dataset maintainer: Ayush Saraf (published under his own name; no company
 or legal entity behind it).
 
+## Live page
+
+The upload page (`index.html` + `assets/`) is a fully client-side static
+site — no build step, no server. Once GitHub Pages is enabled on this
+repo it will be live at https://ayush29feb.github.io/kite-clip-dataset/
+
+For now, submitted clips are stored only in the visitor's own browser
+(IndexedDB, video included) so the page can be tried and reviewed; the
+shared backend in the pipeline below comes later. The single
+`saveClip()` function in `assets/app.js` is the seam where the real
+upload API will plug in.
+
 ## What gets collected per clip
 
 - The clip itself (5–15s, any phone/GoPro/drone format)
