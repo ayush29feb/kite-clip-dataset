@@ -296,6 +296,7 @@ async function scanFile(file) {
     clipInfo.gps_lon = gps.lon;
     showGPSMap();
     renderClipMeta();
+    refreshSummaries(); // reflect the GPS in the Spot row right away
   }
 
   // Whatever else the file's own metadata offers: taken date, camera
@@ -703,7 +704,20 @@ function refreshSummaries() {
   const riderNames = collectRiders().map((r) => r.name).filter(Boolean);
   renderSummary("riders", riderNames, null);
 
-  renderSummary("spot", [], val(els.location));
+  // Spot: typed/picked spot wins; otherwise surface the file's own GPS
+  // in the row so the auto-detected location is visible on the card.
+  const spotText = val(els.location);
+  if (spotText) {
+    renderSummary("spot", [], spotText);
+  } else if (clipInfo.gps_lat != null && clipInfo.gps_lon != null) {
+    renderSummary("spot", [`📍 ${fmtCoords(clipInfo.gps_lat, clipInfo.gps_lon)}`], null);
+    const hint = document.createElement("span");
+    hint.className = "meta-fromfile";
+    hint.textContent = "from your file — tap to name the spot";
+    summaryEls.spot.append(hint);
+  } else {
+    renderSummary("spot", [], null);
+  }
   renderSummary("shot", shotType ? [shotLabel(shotType)] : [], null);
 
   const dev = resolvedDevice();
