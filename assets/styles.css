@@ -70,30 +70,37 @@ body {
 }
 
 /* ---------- Clip stage (hero media) ---------- */
-.clip-stage { position: relative; background: #101418; }
+/* The hidden attribute must always win over component display rules —
+   otherwise the empty <video> renders as a black "fake player" box. */
+[hidden] { display: none !important; }
+
+.clip-stage { position: relative; padding: 14px 14px 0; }
 .clip-picker {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   width: 100%;
-  padding: 56px 20px;
-  border: 0;
-  background: transparent;
-  color: #eef2f5;
+  min-height: 190px;
+  padding: 32px 20px;
+  border: 2px dashed #b9c9d6;
+  border-radius: 14px;
+  background: #f7fafc;
+  color: var(--ink);
   cursor: pointer;
   font: inherit;
   text-align: center;
 }
 .clip-picker-icon { font-size: 40px; line-height: 1; color: var(--accent); }
 .clip-picker-title { font-size: 18px; font-weight: 700; }
-.clip-picker-sub { font-size: 13px; color: #9fb0bd; }
-.clip-stage.dragover { outline: 3px dashed var(--accent); outline-offset: -10px; }
-.clip-preview { display: block; width: 100%; max-height: 70vh; background: #000; }
+.clip-picker-sub { font-size: 13px; color: var(--muted); }
+.clip-stage.dragover .clip-picker { border-color: var(--accent); background: #eef6ff; }
+.clip-preview { display: block; width: 100%; max-height: 70vh; background: #000; border-radius: 14px; }
 .clip-change {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 24px;
+  right: 24px;
   border: 0;
   border-radius: 999px;
   padding: 8px 14px;
