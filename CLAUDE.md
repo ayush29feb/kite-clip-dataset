@@ -57,11 +57,25 @@ On top of the dataset, in order:
 ## Metadata per clip
 
 - `trick_name` — primary label (prominent first field, but optional in the form)
-- `rider_name` — person performing the trick. **Separate from uploader:**
-  the uploader is often not the rider. A "same person" toggle is fine,
-  but store both fields distinctly, never merged.
+- `riders` — an ARRAY: a clip can have multiple riders. Each rider has a
+  `name`. **Riders are separate from the uploader** (the uploader is
+  often not a rider). A "same person" toggle syncs the uploader name
+  with the first rider's name; store distinctly, never merged.
 - `uploader_name` — person submitting; the consent record is theirs.
-- `location` — spot name (free text)
+- `location` — spot name, SEARCHABLE in the form (OpenStreetMap
+  Nominatim autocomplete); picking a result also stores `location_lat`
+  / `location_lon` and shows a map preview. Free text still allowed.
+
+## PRIVATE contacts — never published
+
+- Each rider row also has an **optional contact** (email or Instagram
+  handle), and contacts exist ONLY so Ayush can keep track of who's who
+  and whose permission he has. **Contacts are never part of the public
+  dataset** — store them nested under a `private` object in the record,
+  never alongside the public metadata fields, and strip them from any
+  export/release. The consent copy states this split in plain language:
+  the clip and its details are fully public; contact information is not
+  public — only the clips are.
 - `device` — recording device; dropdown (GoPro, iPhone, Android phone,
   Insta360, DJI drone, Ray-Ban Meta, Other + free text). Auto-extract
   make/model from file metadata when the backend exists.
@@ -69,7 +83,9 @@ On top of the dataset, in order:
 - `caption` (optional), `wind`, `kite_size`, `level`, `tags`
 - `uploaded_at` — automatic timestamp
 - `taken_at`, `gps_lat`, `gps_lon` — extracted from the video file's
-  embedded metadata when present (nice-to-have; missing must never block)
+  embedded metadata when present (nice-to-have; missing must never block).
+  When GPS is found, the page shows it on a map (OpenStreetMap embed +
+  Google Maps link), both at upload time and on the saved card.
 - Technical (from transcoding): duration, resolution, fps, codec, size,
   SHA-256 checksum (already computed client-side in the static page)
 - `status` — processing / ready / failed

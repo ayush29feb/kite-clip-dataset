@@ -36,6 +36,13 @@
     <p class="clip-meta" id="clipMeta" hidden></p>
     <p class="warn" id="durationWarn" hidden></p>
 
+    <!-- GPS read from the video file itself, when present -->
+    <div class="map-block" id="gpsBlock" hidden>
+      <p class="map-label">📍 From the video file — <span id="gpsCoords"></span> ·
+        <a id="gpsGmaps" href="#" target="_blank" rel="noopener">Open in Google Maps</a></p>
+      <iframe id="gpsMap" class="map-frame" title="Map of the location recorded in the video file" loading="lazy"></iframe>
+    </div>
+
     <!-- Details: everything optional -->
     <form id="clipForm" novalidate>
       <fieldset class="details">
@@ -46,25 +53,33 @@
           <input type="text" id="trickName" name="trickName" placeholder="e.g. Backroll, Kiteloop, Board-off…" autocomplete="off">
         </label>
 
-        <div class="field-row">
-          <label class="field">
-            <span class="field-label">Rider — who's in the clip</span>
-            <input type="text" id="riderName" name="riderName" placeholder="Rider's name" autocomplete="off">
-          </label>
-          <label class="field">
-            <span class="field-label">Uploader — that's you</span>
-            <input type="text" id="uploaderName" name="uploaderName" placeholder="Your name" autocomplete="off">
-          </label>
+        <div class="field">
+          <span class="field-label">Riders — who's in the clip</span>
+          <div id="riderList"></div>
+          <button type="button" class="add-rider" id="addRiderBtn">+ Add another rider</button>
         </div>
-        <label class="toggle">
-          <input type="checkbox" id="samePerson">
-          <span>I'm the rider in this clip</span>
-        </label>
 
         <label class="field">
-          <span class="field-label">Location</span>
-          <input type="text" id="location" name="location" placeholder="Spot, beach, city…" autocomplete="off">
+          <span class="field-label">Uploader — that's you</span>
+          <input type="text" id="uploaderName" name="uploaderName" placeholder="Your name" autocomplete="off">
         </label>
+        <label class="toggle">
+          <input type="checkbox" id="samePerson">
+          <span>I'm a rider in this clip</span>
+        </label>
+
+        <div class="field location-field">
+          <span class="field-label">Location</span>
+          <div class="loc-search">
+            <input type="text" id="location" name="location" placeholder="Search for a spot, beach, city…" autocomplete="off">
+            <div class="loc-results" id="locationResults" hidden></div>
+          </div>
+          <div class="map-block" id="locationMapBlock" hidden>
+            <p class="map-label">📍 Spot — <span id="locationCoords"></span> ·
+              <a id="locationGmaps" href="#" target="_blank" rel="noopener">Open in Google Maps</a></p>
+            <iframe id="locationMap" class="map-frame" title="Map of the chosen spot" loading="lazy"></iframe>
+          </div>
+        </div>
 
         <label class="field">
           <span class="field-label">Recording device</span>
@@ -133,8 +148,12 @@
       <fieldset class="consent">
         <legend>Before you save — this dataset is public</legend>
         <p class="consent-intro">Clips in this dataset are published openly for
-          anyone to download and use, including for training AI models. Please
-          confirm all four:</p>
+          anyone to download and use, including for training AI models.</p>
+        <p class="consent-intro"><strong>Your clip and its details (trick, rider
+          names, spot, GPS if present) will be fully public. Contact information
+          (emails, Instagram handles) is NEVER published</strong> — it's kept
+          private, only so we can keep track of who's who and whose permission
+          we have. Please confirm all four:</p>
         <label class="check">
           <input type="checkbox" class="consent-box" id="consentRights">
           <span>I own this clip, or I have the owner's permission to submit it.</span>
@@ -145,9 +164,11 @@
         </label>
         <label class="check">
           <input type="checkbox" class="consent-box" id="consentLicense">
-          <span>I agree this clip and its details (including GPS location, if the
-            file has it) will be released publicly under
-            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</span>
+          <span>I agree this clip and its details — trick, rider names, spot, and
+            GPS location if the file has it — will be released publicly under
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+            Contact information (emails, Instagram handles) is not part of the
+            release and is never published.</span>
         </label>
         <label class="check">
           <input type="checkbox" class="consent-box" id="consentRecall">
