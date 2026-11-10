@@ -46,6 +46,20 @@ body {
 .hero h1 { margin: 0 0 8px; font-size: 34px; line-height: 1.1; letter-spacing: -0.02em; }
 .lede { margin: 0; color: var(--muted); font-size: 16px; }
 
+/* Pitch — why share, right above the upload card */
+.pitch {
+  background: linear-gradient(135deg, #eef6ff, #f3fbf5);
+  border: 1px solid var(--line, #e3e8ee);
+  border-radius: 18px;
+  padding: 18px;
+  margin: 0 0 18px;
+}
+.pitch-title { margin: 0 0 8px; font-size: 20px; line-height: 1.2; letter-spacing: -0.01em; }
+.pitch-text { margin: 0 0 10px; font-size: 15px; color: var(--ink, #14202b); }
+.pitch-text:last-child { margin-bottom: 0; }
+.pitch-list { margin: 0 0 12px; padding: 0; list-style: none; display: grid; gap: 8px; }
+.pitch-list li { font-size: 15px; line-height: 1.4; }
+
 /* ---------- Cards ---------- */
 .card {
   background: var(--card);
