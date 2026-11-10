@@ -62,36 +62,76 @@
       <iframe id="gpsMap" class="map-frame" title="Map of the location recorded in the video file" loading="lazy"></iframe>
     </div>
 
-    <!-- Details: everything optional -->
+    <!-- Details: a live summary card. Each row shows the final value as a
+         chip / clean text (or a muted "+ Add" pill when empty) and expands
+         its editor inline when tapped. Everything is optional. -->
     <form id="clipForm" novalidate>
-      <fieldset class="details">
-        <legend>Details <span class="optional-note">— all optional, fill in what you know</span></legend>
+      <div class="meta-rows" id="metaRows">
+        <p class="meta-hint">All optional — tap a row to add what you know.</p>
 
-        <label class="field field-trick">
-          <span class="field-label">Trick name</span>
-          <input type="text" id="trickName" name="trickName" placeholder="e.g. Backroll, Kiteloop, Board-off…" autocomplete="off">
-        </label>
-
-        <div class="field">
-          <span class="field-label">Riders — who's in the clip</span>
-          <div id="riderList"></div>
-          <button type="button" class="add-rider" id="addRiderBtn">+ Add another rider</button>
+        <!-- Trick -->
+        <div class="meta-row" data-row="trick">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Trick</span>
+            <span class="meta-values" data-summary="trick"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <input type="text" id="trickName" name="trickName" placeholder="e.g. Backroll, Kiteloop, Board-off…" autocomplete="off">
+              <div class="trick-pills" id="trickPills">
+                <button type="button" class="chip trick-pill" data-trick="Backroll">Backroll</button>
+                <button type="button" class="chip trick-pill" data-trick="Frontroll">Frontroll</button>
+                <button type="button" class="chip trick-pill" data-trick="Kiteloop">Kiteloop</button>
+                <button type="button" class="chip trick-pill" data-trick="Megaloop">Megaloop</button>
+                <button type="button" class="chip trick-pill" data-trick="Board-off">Board-off</button>
+                <button type="button" class="chip trick-pill" data-trick="Darkslide">Darkslide</button>
+                <button type="button" class="chip trick-pill" data-trick="One-foot">One-foot</button>
+                <button type="button" class="chip trick-pill" data-trick="Board grab">Board grab</button>
+                <button type="button" class="chip trick-pill" data-trick="Raley">Raley</button>
+                <button type="button" class="chip trick-pill" data-trick="S-bend">S-bend</button>
+                <button type="button" class="chip trick-pill" data-trick="Blind Judge">Blind Judge</button>
+                <button type="button" class="chip trick-pill" data-trick="Slim Chance">Slim Chance</button>
+                <button type="button" class="chip trick-pill" data-trick="KGB">KGB</button>
+                <button type="button" class="chip trick-pill" data-trick="Boogie Loop">Boogie Loop</button>
+                <button type="button" class="chip trick-pill" data-trick="Contra loop">Contra loop</button>
+                <button type="button" class="chip trick-pill" data-trick="Late backroll">Late backroll</button>
+                <button type="button" class="chip trick-pill" data-trick="Handle pass">Handle pass</button>
+                <button type="button" class="chip trick-pill" data-trick="Toeside">Toeside</button>
+              </div>
+            </div></div>
+          </div>
         </div>
 
-        <label class="field">
-          <span class="field-label">Uploader — that's you</span>
-          <input type="text" id="uploaderName" name="uploaderName" placeholder="Your name" autocomplete="off">
-        </label>
-        <label class="toggle">
-          <input type="checkbox" id="samePerson">
-          <span>I'm a rider in this clip</span>
-        </label>
+        <!-- Riders -->
+        <div class="meta-row" data-row="riders">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Riders</span>
+            <span class="meta-values" data-summary="riders"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <div id="riderList"></div>
+              <button type="button" class="add-rider" id="addRiderBtn">+ Add another rider</button>
+            </div></div>
+          </div>
+        </div>
 
-        <div class="field location-field">
-          <span class="field-label">Location</span>
-          <div class="loc-search">
-            <input type="text" id="location" name="location" placeholder="Search for a spot, beach, city…" autocomplete="off">
-            <div class="loc-results" id="locationResults" hidden></div>
+        <!-- Spot -->
+        <div class="meta-row" data-row="spot">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Spot</span>
+            <span class="meta-values" data-summary="spot"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <div class="loc-search">
+                <input type="text" id="location" name="location" placeholder="Search for a spot, beach, city…" autocomplete="off">
+                <div class="loc-results" id="locationResults" hidden></div>
+              </div>
+            </div></div>
           </div>
           <div class="map-block" id="locationMapBlock" hidden>
             <p class="map-label">📍 Spot — <span id="locationCoords"></span> ·
@@ -100,68 +140,140 @@
           </div>
         </div>
 
-        <label class="field">
-          <span class="field-label">Recording device</span>
-          <select id="deviceSelect" name="deviceSelect">
-            <option value="">Not sure / skip</option>
-            <option>GoPro</option>
-            <option>iPhone</option>
-            <option>Android phone</option>
-            <option>Insta360</option>
-            <option>DJI drone</option>
-            <option>Ray-Ban Meta</option>
-            <option value="__other">Other…</option>
-          </select>
-        </label>
-        <label class="field" id="deviceOtherField" hidden>
-          <span class="field-label">Device (other)</span>
-          <input type="text" id="deviceOther" name="deviceOther" placeholder="What was it filmed on?" autocomplete="off">
-        </label>
-
-        <div class="field">
-          <span class="field-label">Shot type</span>
-          <div class="chips" id="shotChips" role="radiogroup" aria-label="Shot type">
-            <button type="button" class="chip" data-value="pov" role="radio" aria-checked="false">POV</button>
-            <button type="button" class="chip" data-value="drone" role="radio" aria-checked="false">Drone</button>
-            <button type="button" class="chip" data-value="handheld" role="radio" aria-checked="false">Handheld</button>
-            <button type="button" class="chip" data-value="static" role="radio" aria-checked="false">Static / tripod</button>
-            <button type="button" class="chip" data-value="other" role="radio" aria-checked="false">Other</button>
+        <!-- Shot type -->
+        <div class="meta-row" data-row="shot">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Shot type</span>
+            <span class="meta-values" data-summary="shot"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <div class="chips" id="shotChips" role="radiogroup" aria-label="Shot type">
+                <button type="button" class="chip" data-value="pov" role="radio" aria-checked="false">POV</button>
+                <button type="button" class="chip" data-value="drone" role="radio" aria-checked="false">Drone</button>
+                <button type="button" class="chip" data-value="handheld" role="radio" aria-checked="false">Handheld</button>
+                <button type="button" class="chip" data-value="static" role="radio" aria-checked="false">Static / tripod</button>
+                <button type="button" class="chip" data-value="other" role="radio" aria-checked="false">Other</button>
+              </div>
+            </div></div>
           </div>
         </div>
 
-        <label class="field">
-          <span class="field-label">Caption</span>
-          <textarea id="caption" name="caption" rows="2" placeholder="Anything about this clip — conditions, the session, the landing…"></textarea>
-        </label>
-
-        <div class="field-row">
-          <label class="field">
-            <span class="field-label">Wind</span>
-            <input type="text" id="wind" name="wind" placeholder="e.g. 25 kn" autocomplete="off">
-          </label>
-          <label class="field">
-            <span class="field-label">Kite size</span>
-            <input type="text" id="kiteSize" name="kiteSize" placeholder="e.g. 9m" autocomplete="off">
-          </label>
+        <!-- Device -->
+        <div class="meta-row" data-row="device">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Device</span>
+            <span class="meta-values" data-summary="device"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <select id="deviceSelect" name="deviceSelect">
+                <option value="">Not sure / skip</option>
+                <option>GoPro</option>
+                <option>iPhone</option>
+                <option>Android phone</option>
+                <option>Insta360</option>
+                <option>DJI drone</option>
+                <option>Ray-Ban Meta</option>
+                <option value="__other">Other…</option>
+              </select>
+              <div id="deviceOtherField" hidden>
+                <span class="editor-label">Device (other)</span>
+                <input type="text" id="deviceOther" name="deviceOther" placeholder="What was it filmed on?" autocomplete="off">
+              </div>
+            </div></div>
+          </div>
         </div>
 
-        <div class="field-row">
-          <label class="field">
-            <span class="field-label">Level</span>
-            <select id="level" name="level">
-              <option value="">Skip</option>
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
-              <option>Pro</option>
-            </select>
-          </label>
-          <label class="field">
-            <span class="field-label">Tags</span>
-            <input type="text" id="tags" name="tags" placeholder="comma, separated, tags" autocomplete="off">
-          </label>
+        <!-- Wind -->
+        <div class="meta-row" data-row="wind">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Wind</span>
+            <span class="meta-values" data-summary="wind"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <input type="text" id="wind" name="wind" placeholder="e.g. 25 kn" autocomplete="off">
+            </div></div>
+          </div>
         </div>
-      </fieldset>
+
+        <!-- Kite size -->
+        <div class="meta-row" data-row="kite">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Kite size</span>
+            <span class="meta-values" data-summary="kite"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <input type="text" id="kiteSize" name="kiteSize" placeholder="e.g. 9m" autocomplete="off">
+            </div></div>
+          </div>
+        </div>
+
+        <!-- Level -->
+        <div class="meta-row" data-row="level">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Level</span>
+            <span class="meta-values" data-summary="level"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <select id="level" name="level">
+                <option value="">Skip</option>
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+                <option>Pro</option>
+              </select>
+            </div></div>
+          </div>
+        </div>
+
+        <!-- Caption & tags -->
+        <div class="meta-row" data-row="caption">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Caption</span>
+            <span class="meta-values" data-summary="caption"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <textarea id="caption" name="caption" rows="2" placeholder="Anything about this clip — conditions, the session, the landing…"></textarea>
+              <span class="editor-label">Tags</span>
+              <input type="text" id="tags" name="tags" placeholder="comma, separated, tags" autocomplete="off">
+            </div></div>
+          </div>
+        </div>
+
+        <!-- Uploader -->
+        <div class="meta-row" data-row="uploader">
+          <button type="button" class="meta-head" aria-expanded="false">
+            <span class="meta-label">Uploader</span>
+            <span class="meta-values" data-summary="uploader"></span>
+            <span class="meta-chev" aria-hidden="true">›</span>
+          </button>
+          <div class="meta-editor-wrap">
+            <div class="meta-editor"><div class="meta-editor-inner">
+              <input type="text" id="uploaderName" name="uploaderName" placeholder="Your name" autocomplete="off">
+              <label class="toggle">
+                <input type="checkbox" id="samePerson">
+                <span>I'm a rider in this clip</span>
+              </label>
+              <span class="editor-label">Your contact (optional)</span>
+              <input type="text" id="uploaderContact" name="uploaderContact" placeholder="Instagram handle or email (optional)" autocomplete="off">
+              <p class="private-note">Private — never published. Just so we can
+                keep track of who's who and whose permission we have.</p>
+            </div></div>
+          </div>
+        </div>
+
+      </div>
 
       <!-- Consent: the only hard requirement -->
       <fieldset class="consent">
